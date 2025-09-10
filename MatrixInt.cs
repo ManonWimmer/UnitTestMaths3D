@@ -73,7 +73,7 @@ public class MatrixInt
             
             for (int i = 0; i < this.NbLines; i++)
             {
-                for (int j = 0; j < this.NbLines; j++)
+                for (int j = 0; j < this.NbColumns; j++)
                 {
                     if ((i == j && this.Matrix[i, j] != 1) || (i != j && this.Matrix[i, j] != 0))
                     {
@@ -83,5 +83,40 @@ public class MatrixInt
             }
 
             return true;
+        }
+
+        public void Multiply(int value)
+        {
+            for (int i = 0; i < this.NbLines; i++)
+            {
+                for (int j = 0; j < this.NbColumns; j++)
+                {
+                    this.Matrix[i, j] = value * this.Matrix[i, j];
+                }
+            }
+        }
+        
+        public static MatrixInt Multiply(MatrixInt matrixInt, int value)
+        {
+            MatrixInt newMatrix = new MatrixInt(matrixInt);
+
+            newMatrix.Multiply(value);
+
+            return newMatrix;
+        }
+        
+        public static MatrixInt operator *(MatrixInt matrixInt, int value)
+        {
+            return MatrixInt.Multiply(matrixInt, value);
+        }
+        
+        public static MatrixInt operator *(int value, MatrixInt matrixInt)
+        {
+            return MatrixInt.Multiply(matrixInt, value);
+        }
+        
+        public static MatrixInt operator -(MatrixInt matrixInt)
+        {
+            return MatrixInt.Multiply(matrixInt, -1);
         }
     }
