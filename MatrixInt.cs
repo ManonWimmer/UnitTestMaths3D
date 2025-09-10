@@ -96,6 +96,32 @@ public class MatrixInt
             }
         }
         
+        public MatrixInt Multiply(MatrixInt m2)
+        {
+            if (this.NbColumns != m2.NbLines)
+            {
+                throw new MatrixMultiplyException("Matrix sizes do not match for multiplication.");
+            }
+            
+            MatrixInt m = new MatrixInt(this.NbLines, m2.NbColumns);
+            
+            for (int i = 0; i < this.NbLines; i++)
+            {
+                for (int j = 0; j < m2.NbColumns; j++)
+                {
+                    int value = 0;
+                    
+                    for (int k = 0; k < this.NbColumns; k++)
+                    {
+                        value += this.Matrix[i, k] * m2[k, j];
+                    }
+                    m[i, j] = value;
+                }
+            }
+            
+            return m;
+        }
+        
         public static MatrixInt Multiply(MatrixInt matrixInt, int value)
         {
             MatrixInt newMatrix = new MatrixInt(matrixInt);
@@ -105,9 +131,19 @@ public class MatrixInt
             return newMatrix;
         }
         
+        public static MatrixInt Multiply(MatrixInt m1, MatrixInt m2)
+        {
+            return m1.Multiply(m2);
+        }
+        
         public static MatrixInt operator *(MatrixInt matrixInt, int value)
         {
             return MatrixInt.Multiply(matrixInt, value);
+        }
+        
+        public static MatrixInt operator *(MatrixInt m1, MatrixInt m2)
+        {
+            return m1.Multiply(m2);
         }
         
         public static MatrixInt operator *(int value, MatrixInt matrixInt)
@@ -154,11 +190,20 @@ public class MatrixInt
         }
     }
 
-public class MatrixSumException : System.Exception
+public class MatrixSumException : Exception
 {
     public MatrixSumException() {}
 
     public MatrixSumException(string message) : base(message) {}
 
     public MatrixSumException(string message, Exception inner) : base(message, inner) {}
+}
+
+public class MatrixMultiplyException : Exception
+{
+    public MatrixMultiplyException() {}
+
+    public MatrixMultiplyException(string message) : base(message) {}
+
+    public MatrixMultiplyException(string message, Exception inner) : base(message, inner) {}
 }
