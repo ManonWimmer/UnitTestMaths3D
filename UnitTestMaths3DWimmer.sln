@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestMaths3DWimmer", "UnitTestMaths3DWimmer.csproj", "{7A0F5228-C39C-4263-83AD-4894D9582EFD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A0F5228-C39C-4263-83AD-4894D9582EFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A0F5228-C39C-4263-83AD-4894D9582EFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A0F5228-C39C-4263-83AD-4894D9582EFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A0F5228-C39C-4263-83AD-4894D9582EFD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
