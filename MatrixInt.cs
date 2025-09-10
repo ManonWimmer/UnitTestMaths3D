@@ -2,7 +2,7 @@
 
 namespace UnitTestMaths3DWimmer;
 
-public struct MatrixInt
+public class MatrixInt
     {
         public int NbLines;
         public int NbColumns;
@@ -22,6 +22,22 @@ public struct MatrixInt
             this.NbColumns = m.GetLength(1);
             
             this.Matrix = m;
+        }
+        
+        public MatrixInt(MatrixInt m)
+        {
+            this.NbLines = m.NbLines;
+            this.NbColumns = m.NbColumns;
+
+            int[,] copiedMatrix = new int[this.NbLines, this.NbColumns];
+            for (int i = 0; i < this.NbLines; i++)
+            {
+                for (int j = 0; j < this.NbColumns; j++)
+                {
+                    copiedMatrix[i, j] = m[i, j];
+                }
+            }
+            this.Matrix = copiedMatrix;
         }
         
         public int this[int i, int j]
