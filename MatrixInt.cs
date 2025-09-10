@@ -119,4 +119,46 @@ public class MatrixInt
         {
             return MatrixInt.Multiply(matrixInt, -1);
         }
+
+        public void Add(MatrixInt m2)
+        {
+            if (this.NbLines != m2.NbLines || this.NbColumns != m2.NbColumns)
+            {
+                throw new MatrixSumException("Matrix sizes do not match.");
+            }
+            
+            for (int i = 0; i < this.NbLines; i++)
+            {
+                for (int j = 0; j < this.NbColumns; j++)
+                {
+                    this.Matrix[i, j] += m2[i, j];
+                }
+            }
+        }
+
+        public static MatrixInt Add(MatrixInt m1, MatrixInt m2)
+        {
+            MatrixInt newMatrix = new MatrixInt(m1);
+            newMatrix.Add(m2);
+            return newMatrix;
+        }
+        
+        public static MatrixInt operator +(MatrixInt m1, MatrixInt m2)
+        {
+            return Add(m1, m2);
+        }
+        
+        public static MatrixInt operator -(MatrixInt m1, MatrixInt m2)
+        {
+            return Add(m1, -m2);
+        }
     }
+
+public class MatrixSumException : System.Exception
+{
+    public MatrixSumException() {}
+
+    public MatrixSumException(string message) : base(message) {}
+
+    public MatrixSumException(string message, Exception inner) : base(message, inner) {}
+}
