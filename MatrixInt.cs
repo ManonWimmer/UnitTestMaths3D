@@ -50,4 +50,38 @@ public class MatrixInt
         {
             return this.Matrix;
         }
+
+        public static MatrixInt Identity(int n)
+        {
+            MatrixInt m = new MatrixInt(n, n);
+
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (i == j) m[i, j] = 1;
+                    else m[i, j] = 0;
+                }
+            }
+            
+            return m;
+        }
+
+        public bool IsIdentity()
+        {
+            if (this.NbLines != this.NbColumns) return false;
+            
+            for (int i = 0; i < this.NbLines; i++)
+            {
+                for (int j = 0; j < this.NbLines; j++)
+                {
+                    if ((i == j && this.Matrix[i, j] != 1) || (i != j && this.Matrix[i, j] != 0))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
     }
