@@ -1,5 +1,7 @@
 // ----- MANON WIMMER ----- //
 
+using System.Diagnostics;
+
 namespace UnitTestMaths3DWimmer;
 
 public class MatrixInt
@@ -207,6 +209,53 @@ public class MatrixInt
         public static MatrixInt Transpose(MatrixInt matrixInt)
         {
             return matrixInt.Transpose();
+        }
+
+        public static MatrixInt GenerateAugmentedMatrix(MatrixInt m1, MatrixInt m2)
+        {
+            MatrixInt augmentedMatrix = new MatrixInt(m1.NbLines, m1.NbColumns + 1);
+            int m2Count = 0;
+            
+            for (int i = 0; i < augmentedMatrix.NbLines; i++)
+            {
+                for (int j = 0; j < augmentedMatrix.NbColumns; j++)
+                {
+                    if (j <= m1.NbColumns - 1)
+                    {
+                        augmentedMatrix.Matrix[i, j] = m1[i, j];
+                    }
+                    else
+                    {
+                        augmentedMatrix.Matrix[i, j] = m2[m2Count, 0];
+                        m2Count++;
+                    }
+                }
+            }
+
+            return augmentedMatrix;
+        }
+
+        public (MatrixInt m1, MatrixInt m2) Split(int splitValue)
+        {
+            MatrixInt m1 = new MatrixInt(this.NbLines, splitValue + 1);
+            MatrixInt m2 = new MatrixInt(this.NbLines, this.NbColumns - splitValue - 1);
+
+            for (int i = 0; i < this.NbLines; i++)
+            {
+                for (int j = 0; j < this.NbColumns; j++)
+                {
+                    if (j <= m1.NbColumns - 1)
+                    {
+                        m1[i, j] = this.Matrix[i, j];
+                    }
+                    else
+                    {
+                        m2[i, j  - m1.NbColumns] = this.Matrix[i, j];
+                    }
+                }
+            }
+            
+            return (m1, m2);
         }
     }
 
