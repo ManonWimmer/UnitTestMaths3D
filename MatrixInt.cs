@@ -188,6 +188,26 @@ public class MatrixInt
         {
             return Add(m1, -m2);
         }
+
+        public MatrixInt Transpose()
+        {
+            MatrixInt newMatrix = new MatrixInt(this.NbColumns, this.NbLines);
+
+            for (int i = 0; i < this.NbLines; i++)
+            {
+                for (int j = 0; j < this.NbColumns; j++)
+                {
+                    newMatrix.Matrix[j, i] = this.Matrix[i, j];
+                }
+            }
+            
+            return newMatrix;
+        }
+        
+        public static MatrixInt Transpose(MatrixInt matrixInt)
+        {
+            return matrixInt.Transpose();
+        }
     }
 
 public class MatrixSumException : Exception
