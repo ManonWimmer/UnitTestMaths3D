@@ -43,7 +43,7 @@ namespace Maths_Matrices.Tests
                 { 3f }
             }));
         }
-
+        
         [Test, DefaultFloatingPointTolerance(0.001f)] 
         public void TestApplyRowReduction_Exercise()
         {

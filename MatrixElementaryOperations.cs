@@ -8,12 +8,14 @@ public static class MatrixElementaryOperations
     {
         for (int j = 0; j < matrix.NbColumns; j++)
         {
-            /*
-            int temp = matrix[l1, j];
-            matrix[l1, j] = matrix[l2, j];
-            matrix[l2, j] = temp; 
-            */
-            
+            (matrix[l1, j], matrix[l2, j]) = (matrix[l2, j], matrix[l1, j]);
+        }
+    }
+    
+    public static void SwapLines(MatrixFloat matrix, int l1, int l2)
+    {
+        for (int j = 0; j < matrix.NbColumns; j++)
+        {
             (matrix[l1, j], matrix[l2, j]) = (matrix[l2, j], matrix[l1, j]);
         }
     }
@@ -22,17 +24,36 @@ public static class MatrixElementaryOperations
     {
         for (int i = 0; i < matrix.NbLines; i++)
         {
-            /*
-            int temp = matrix[i, c1];
-            matrix[i, c1] = matrix[i, c2];
-            matrix[i, c2] = temp;
-             */
-            
+            (matrix[i, c1], matrix[i, c2]) = (matrix[i, c2], matrix[i, c1]);
+        }
+    }
+    
+    public static void SwapColumns(MatrixFloat matrix, int c1, int c2)
+    {
+        for (int i = 0; i < matrix.NbLines; i++)
+        {
             (matrix[i, c1], matrix[i, c2]) = (matrix[i, c2], matrix[i, c1]);
         }
     }
 
     public static void MultiplyLine(MatrixInt matrix, int line, int value)
+    {
+        if (value == 0)
+        {
+            throw new MatrixScalarZeroException("Multiply line with 0");
+        }
+        else if (line >= matrix.NbLines || line < 0)
+        {
+            throw new MatrixScalarOutOfRangeException("Multiply line out of range");
+        }
+
+        for (int j = 0; j < matrix.NbColumns; j++)
+        {
+            matrix[line, j] *= value;
+        }
+    }
+    
+    public static void MultiplyLine(MatrixFloat matrix, int line, float value)
     {
         if (value == 0)
         {
@@ -81,6 +102,15 @@ public static class MatrixElementaryOperations
             matrixInt[i, columnResult] += matrixInt[i, columnToAdd] * factor;
         }
     }
+    
+    public static void AddMultipleOfLine(MatrixFloat m, int sourceLine, int targetLine, float factor)
+    {
+        for (int c = 0; c < m.NbColumns; c++)
+        {
+            m[targetLine, c] += factor * m[sourceLine, c];
+        }
+    }
+
 }
 
 public class MatrixScalarZeroException : Exception
