@@ -337,11 +337,9 @@ public class MatrixFloat
         for (int j = 0; j < size; j++)
         {
             MatrixFloat sub = matrix.SubMatrix(0, j);
-
-            // Alternate sign
-            float sign = (j % 2 == 0) ? 1f : -1f;
-            
             float subDet = Determinant(sub);
+            
+            float sign = (j % 2 == 0) ? 1f : -1f;
             
             totalDeterminant += sign * matrix[0, j] * subDet;
         }
@@ -349,6 +347,34 @@ public class MatrixFloat
         return totalDeterminant;
     }
 
+    public MatrixFloat Adjugate()
+    {
+        int size = NbLines;
+        MatrixFloat result = new MatrixFloat(size, size);
+
+        // Cᵢⱼ = (-1)^(i+j) × det(Mᵢⱼ)
+
+        for (int row = 0; row < size; row++)
+        {
+            for (int col = 0; col < size; col++)
+            {
+                MatrixFloat minor = SubMatrix(row, col);
+                float det = Determinant(minor);
+                
+                float sign = ((row + col) % 2 == 0) ? 1f : -1f;
+                
+                result[col, row] = sign * det;
+            }
+        }
+
+        return result; 
+    }
+
+    
+    public static MatrixFloat Adjugate(MatrixFloat matrixFloat)
+    {
+        return matrixFloat.Adjugate();  
+    }
 }
 
 public class MatrixInvertException : Exception
