@@ -315,6 +315,40 @@ public class MatrixFloat
     {
         return matrixFloat.SubMatrix(rowToRemove, colToRemove);
     }
+
+    public static float Determinant(MatrixFloat matrix)
+    {
+        int size = matrix.NbLines;
+        
+        if (matrix.NbLines != matrix.NbColumns)
+            throw new InvalidOperationException("Determinant is only defined for square matrices.");
+
+        // Matrix 1x1
+        if (size == 1)
+            return matrix[0, 0];
+
+        // Matrix 2x2
+        if (size == 2)
+            return matrix[0, 0] * matrix[1, 1] - matrix[0, 1] * matrix[1, 0];
+
+        // det(M) = somme sur j de [ (-1)^(j) * M[0][j] * det(M_0j) ] -> (-1)^(j) = signe
+        float totalDeterminant = 0f;
+        
+        for (int j = 0; j < size; j++)
+        {
+            MatrixFloat sub = matrix.SubMatrix(0, j);
+
+            // Alternate sign
+            float sign = (j % 2 == 0) ? 1f : -1f;
+            
+            float subDet = Determinant(sub);
+            
+            totalDeterminant += sign * matrix[0, j] * subDet;
+        }
+
+        return totalDeterminant;
+    }
+
 }
 
 public class MatrixInvertException : Exception
