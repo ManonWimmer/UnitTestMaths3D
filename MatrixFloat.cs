@@ -212,22 +212,21 @@ public class MatrixFloat
     
     public static MatrixFloat GenerateAugmentedMatrix(MatrixFloat m1, MatrixFloat m2)
     {
-        MatrixFloat augmentedMatrix = new MatrixFloat(m1.NbLines, m1.NbColumns + 1);
-        int m2Count = 0;
-            
-        for (int i = 0; i < augmentedMatrix.NbLines; i++)
+        if (m1.NbLines != m2.NbLines)
+            throw new ArgumentException("M1 and M2 must have the same number of lines.");
+    
+        MatrixFloat augmentedMatrix = new MatrixFloat(m1.NbLines, m1.NbColumns + m2.NbColumns);
+        
+        for (int i = 0; i < m1.NbLines; i++)
         {
-            for (int j = 0; j < augmentedMatrix.NbColumns; j++)
+            for (int j = 0; j < m1.NbColumns; j++)
             {
-                if (j <= m1.NbColumns - 1)
-                {
-                    augmentedMatrix.Matrix[i, j] = m1[i, j];
-                }
-                else
-                {
-                    augmentedMatrix.Matrix[i, j] = m2[m2Count, 0];
-                    m2Count++;
-                }
+                augmentedMatrix[i, j] = m1[i, j];
+            }
+
+            for (int j = 0; j < m2.NbColumns; j++)
+            {
+                augmentedMatrix[i, j + m1.NbColumns] = m2[i, j];
             }
         }
 
@@ -256,4 +255,39 @@ public class MatrixFloat
             
         return (m1, m2);
     }
+
+    public MatrixFloat InvertByRowReduction()
+    {
+        if (this.NbLines != this.NbColumns)
+        {
+            throw new MatrixInvertException("Matrix must be square to invert.");
+        }
+
+        MatrixFloat identity = MatrixFloat.Identity(this.NbLines);
+    
+        // Appliquer l'algorithme de réduction par lignes
+        var (left, right) = MatrixRowReductionAlgorithm.Apply(new MatrixFloat(this), identity);
+
+        // Si la matrice de gauche n'est pas l'identité, elle n'est pas inversible
+        if (!left.IsIdentity())
+        {
+            throw new MatrixInvertException("Matrix is not invertible (singular matrix).");
+        }
+
+        return right;
+    }
+    
+    public static MatrixFloat InvertByRowReduction(MatrixFloat matrixFloat)
+    {
+        return matrixFloat.InvertByRowReduction();
+    }
+}
+
+public class MatrixInvertException : Exception
+{
+    public MatrixInvertException() {}
+
+    public MatrixInvertException(string message) : base(message) {}
+
+    public MatrixInvertException(string message, Exception inner) : base(message, inner) {}
 }
