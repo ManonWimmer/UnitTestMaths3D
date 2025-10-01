@@ -264,11 +264,9 @@ public class MatrixFloat
         }
 
         MatrixFloat identity = MatrixFloat.Identity(this.NbLines);
-    
-        // Appliquer l'algorithme de réduction par lignes
+        
         var (left, right) = MatrixRowReductionAlgorithm.Apply(new MatrixFloat(this), identity);
-
-        // Si la matrice de gauche n'est pas l'identité, elle n'est pas inversible
+        
         if (!left.IsIdentity())
         {
             throw new MatrixInvertException("Matrix is not invertible (singular matrix).");
@@ -280,6 +278,42 @@ public class MatrixFloat
     public static MatrixFloat InvertByRowReduction(MatrixFloat matrixFloat)
     {
         return matrixFloat.InvertByRowReduction();
+    }
+
+    public MatrixFloat SubMatrix(int rowToRemove, int columnToRemove)
+    {
+        if (NbLines != NbColumns)
+            throw new InvalidOperationException("SubMatrix is only defined for square matrices.");
+
+        // New matrix with new size
+        int newSize = NbLines - 1;
+        MatrixFloat result = new MatrixFloat(newSize, newSize);
+
+        int rowIndex = 0;
+
+        // Fill matrix (expect row index == row to remove & same for col)
+        for (int i = 0; i < NbLines; i++)
+        {
+            if (i == rowToRemove) continue;
+            int colIndex = 0;
+
+            for (int j = 0; j < NbColumns; j++)
+            {
+                if (j == columnToRemove) continue;
+
+                result[rowIndex, colIndex] = this[i, j];
+                colIndex++;
+            }
+
+            rowIndex++;
+        }
+
+        return result;
+    }
+    
+    public static MatrixFloat SubMatrix(MatrixFloat matrixFloat, int rowToRemove, int colToRemove)
+    {
+        return matrixFloat.SubMatrix(rowToRemove, colToRemove);
     }
 }
 
