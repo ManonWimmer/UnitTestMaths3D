@@ -375,6 +375,48 @@ public class MatrixFloat
     {
         return matrixFloat.Adjugate();  
     }
+
+    public MatrixFloat InvertByDeterminant()
+    {
+        // A⁻¹ = (1/det) * adj(A)
+        
+        float det = Determinant(this);
+    
+        // Check if inversible
+        if (Math.Abs(det) < 1e-6f) // Tolerance float
+            throw new MatrixInvertException("Matrix is not invertible (determinant = 0)");
+        
+        MatrixFloat adj = this.Adjugate();
+
+        MatrixFloat inverse = adj * (1f / det);
+
+        return inverse;
+    }
+    
+    public static MatrixFloat InvertByDeterminant(MatrixFloat matrix)
+    {
+        return matrix.InvertByDeterminant();
+    }
+    
+    // matrix * float
+    public static MatrixFloat operator *(MatrixFloat matrix, float value)
+    {
+        MatrixFloat result = new MatrixFloat(matrix);
+        for (int i = 0; i < result.NbLines; i++)
+        {
+            for (int j = 0; j < result.NbColumns; j++)
+            {
+                result[i, j] *= value;
+            }
+        }
+        return result;
+    }
+
+    // float * matrix
+    public static MatrixFloat operator *(float value, MatrixFloat matrix)
+    {
+        return matrix * value; 
+    }
 }
 
 public class MatrixInvertException : Exception
