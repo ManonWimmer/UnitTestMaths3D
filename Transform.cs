@@ -10,32 +10,63 @@ public class Transform
         set
         {
             _localPosition = value;
-            RecalculateMatrix();
+            RecalculateLocalTranslationMatrix();
         }
     }
     
     private Vector4 _localPosition;
-   
+
+    public Vector4 LocalRotation
+    {
+        get => _localRotation;
+        set
+        {
+            _localRotation = value;
+            RecalculateLocalRotationMatrix();
+        }
+    }
+    
+    private Vector4 _localRotation;
+    
     public MatrixFloat LocalTranslationMatrix;
+    
+    public MatrixFloat LocalRotationMatrix;
+    public MatrixFloat LocalRotationXMatrix;
+    public MatrixFloat LocalRotationYMatrix;
+    public MatrixFloat LocalRotationZMatrix;
     
     public Transform(float x, float y, float z, float w)
     {
         this._localPosition = new Vector4(x, y, z, w);
-        RecalculateMatrix();
+        RecalculateLocalTranslationMatrix();
+        
+        this._localRotation = new Vector4(0, 0, 0, 1);
+        RecalculateLocalRotationMatrix();
     }
 
     public Transform()
     {
         this._localPosition = new Vector4(0f, 0f, 0f, 1f);
-        RecalculateMatrix();
+        RecalculateLocalTranslationMatrix();
+        
+        this._localRotation = new Vector4(0, 0, 0, 1);
+        RecalculateLocalRotationMatrix();
     }
 
-    public void RecalculateMatrix()
+    public void RecalculateLocalTranslationMatrix()
     {
         this.LocalTranslationMatrix = MatrixFloat.Identity(4);
         this.LocalTranslationMatrix[0, 3] = this._localPosition.x;
         this.LocalTranslationMatrix[1, 3] = this._localPosition.y;
         this.LocalTranslationMatrix[2, 3] = this._localPosition.z;
         this.LocalTranslationMatrix[3, 3] = this._localPosition.w;
+    }
+
+    public void RecalculateLocalRotationMatrix()
+    {
+        this.LocalRotationMatrix = MatrixFloat.Identity(4);
+        this.LocalRotationXMatrix = MatrixFloat.Identity(4);
+        this.LocalRotationYMatrix = MatrixFloat.Identity(4);
+        this.LocalRotationZMatrix = MatrixFloat.Identity(4);
     }
 }
