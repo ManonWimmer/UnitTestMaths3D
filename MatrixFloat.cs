@@ -40,6 +40,19 @@ public class MatrixFloat
         
         this.Matrix = copiedMatrix;
     }
+    
+    public MatrixFloat(Vector4 vector4)
+    {
+        this.NbLines = 4;
+        this.NbColumns = 1;
+            
+        this.Matrix = new float[this.NbLines, this.NbColumns];
+        
+        this.Matrix[0, 0] = vector4.x;
+        this.Matrix[1, 0] = vector4.y;
+        this.Matrix[2, 0] = vector4.z;
+        this.Matrix[3, 0] = vector4.w;
+    }
         
     public float this[int i, int j]
     {
