@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "yeEinx1JYdw=",
+  "dgSpecHash": "FDd2XlmHUgg=",
   "success": true,
-  "projectFilePath": "C:\\Users\\manon\\Documents\\Github\\UnitTestMaths3D\\UnitTestMaths3DWimmer.csproj",
+  "projectFilePath": "C:\\Users\\manon\\Documents\\Cours IIM\\A4\\Maths 3D\\Tests\\UnitTestMaths3D\\UnitTestMaths3DWimmer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\manon\\.nuget\\packages\\coverlet.collector\\6.0.0\\coverlet.collector.6.0.0.nupkg.sha512",
     "C:\\Users\\manon\\.nuget\\packages\\microsoft.codecoverage\\17.8.0\\microsoft.codecoverage.17.8.0.nupkg.sha512",
