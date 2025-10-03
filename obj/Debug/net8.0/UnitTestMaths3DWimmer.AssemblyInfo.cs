@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("UnitTestMaths3DWimmer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+213d578ceaffb973a2549b815f846f209687fc95")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+760431b05ad230553985c4e4400ccb25158e1e65")]
 [assembly: System.Reflection.AssemblyProductAttribute("UnitTestMaths3DWimmer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("UnitTestMaths3DWimmer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

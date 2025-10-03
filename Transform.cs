@@ -41,7 +41,7 @@ public class Transform
         RecalculateLocalTranslationMatrix();
         
         this._localRotation = new Vector4(0, 0, 0, 1);
-        RecalculateLocalRotationMatrix();
+        InitLocalRotationMatrix();
     }
 
     public Transform()
@@ -50,7 +50,7 @@ public class Transform
         RecalculateLocalTranslationMatrix();
         
         this._localRotation = new Vector4(0, 0, 0, 1);
-        RecalculateLocalRotationMatrix();
+        InitLocalRotationMatrix();
     }
 
     public void RecalculateLocalTranslationMatrix()
@@ -62,11 +62,48 @@ public class Transform
         this.LocalTranslationMatrix[3, 3] = this._localPosition.w;
     }
 
-    public void RecalculateLocalRotationMatrix()
+    public void InitLocalRotationMatrix()
     {
         this.LocalRotationMatrix = MatrixFloat.Identity(4);
         this.LocalRotationXMatrix = MatrixFloat.Identity(4);
         this.LocalRotationYMatrix = MatrixFloat.Identity(4);
         this.LocalRotationZMatrix = MatrixFloat.Identity(4);
     }
+    public void RecalculateLocalRotationMatrix()
+    {
+        InitLocalRotationMatrix();
+        
+        // Rotation X
+        float radianX = MathF.PI / 180f * _localRotation.x;
+        if (radianX != 0)
+        {
+            LocalRotationXMatrix[1, 1] = MathF.Cos(radianX); 
+            LocalRotationXMatrix[1, 2] = -MathF.Sin(radianX);
+            LocalRotationXMatrix[2, 1] = MathF.Sin(radianX);
+            LocalRotationXMatrix[2, 2] = MathF.Cos(radianX);
+        }
+        
+        // Rotation Y
+        float radianY = MathF.PI / 180f * _localRotation.y;
+        if (radianY != 0)
+        {
+            LocalRotationYMatrix[0, 0] = MathF.Cos(radianY); 
+            LocalRotationYMatrix[0, 2] = MathF.Sin(radianY);
+            LocalRotationYMatrix[2, 0] = -MathF.Sin(radianY);
+            LocalRotationYMatrix[2, 2] = MathF.Cos(radianY);
+        }
+
+        // Rotation Z
+        float radianZ = MathF.PI / 180f * _localRotation.z;
+        if (radianZ != 0)
+        {
+            LocalRotationZMatrix[0, 0] = MathF.Cos(radianZ); 
+            LocalRotationZMatrix[0, 1] = -MathF.Sin(radianZ);
+            LocalRotationZMatrix[1, 0] = MathF.Sin(radianZ);
+            LocalRotationZMatrix[1, 1] = MathF.Cos(radianZ);
+        }
+        
+        LocalRotationMatrix = LocalRotationYMatrix * LocalRotationXMatrix * LocalRotationZMatrix;
+    }
+    
 }
