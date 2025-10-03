@@ -55,6 +55,44 @@ public class Transform
     public MatrixFloat LocalScaleMatrix;
     // ----- LOCAL SCALE ----- //
     
+    // ----- LOCAL TO WORLD ----- //
+    public MatrixFloat LocalToWorldMatrix
+    {
+        get 
+        {
+            RecalculateLocalToWorldMatrix();
+            return _localToWorldMatrix;
+        }
+        set
+        {
+            _localToWorldMatrix = value;
+            RecalculateLocalToWorldMatrix();
+        }
+    }
+
+    private MatrixFloat _localToWorldMatrix;
+    // ----- LOCAL TO WORLD ----- //
+    
+    // ----- WORLD TO LOCAL ----- //
+    public MatrixFloat WorldToLocalMatrix
+    {
+        get 
+        {
+            RecalculateWorldToLocalMatrix();
+            return _worldToLocalMatrix;
+        }
+        set
+        {
+            _worldToLocalMatrix = value;
+            RecalculateWorldToLocalMatrix();
+        }
+    }
+
+    private MatrixFloat _worldToLocalMatrix;
+    // ----- WORLD TO LOCAL ----- //
+    
+    
+    
     public Transform(float x, float y, float z, float w)
     {
         this._localPosition = new Vector4(x, y, z, w);
@@ -65,6 +103,9 @@ public class Transform
 
         this._localScale = new Vector4(1, 1, 1, 0);
         InitLocalScaleMatrix();
+        
+        InitLocalToWorldMatrix();
+        InitWorldToLocalMatrix();
     }
 
     public Transform()
@@ -77,6 +118,9 @@ public class Transform
 
         this._localScale = new Vector4(1, 1, 1, 0);
         InitLocalScaleMatrix();
+
+        InitLocalToWorldMatrix();
+        InitWorldToLocalMatrix();
     }
 
     public void RecalculateLocalTranslationMatrix()
@@ -159,5 +203,29 @@ public class Transform
         {
             LocalScaleMatrix[2, 2] = _localScale.z;
         }
+    }
+
+    public void InitLocalToWorldMatrix()
+    {
+        _localToWorldMatrix = MatrixFloat.Identity(4);
+    }
+
+    public void RecalculateLocalToWorldMatrix()
+    {
+        _localToWorldMatrix = LocalTranslationMatrix * LocalRotationMatrix * LocalScaleMatrix;
+        
+        Console.WriteLine($"LocalToWorldMatrix 0,0 : {_localToWorldMatrix[0,0]}");
+    }
+    
+    public void InitWorldToLocalMatrix()
+    {
+        _worldToLocalMatrix = MatrixFloat.Identity(4);
+    }
+    
+    public void RecalculateWorldToLocalMatrix()
+    {
+        _worldToLocalMatrix = MatrixFloat.InvertByDeterminant(_localToWorldMatrix);
+        
+        Console.WriteLine($"WorldToLocalMatrix 0,0 : {_worldToLocalMatrix[0,0]}");
     }
 }
