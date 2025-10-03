@@ -4,6 +4,7 @@ using UnitTestMaths3DWimmer;
 
 public class Transform
 {
+    // ----- LOCAL POSITION ----- //
     public Vector4 LocalPosition
     {
         get => _localPosition;
@@ -15,7 +16,9 @@ public class Transform
     }
     
     private Vector4 _localPosition;
+    // ----- LOCAL POSITION ----- //
 
+    // ----- LOCAL ROTATION ----- //
     public Vector4 LocalRotation
     {
         get => _localRotation;
@@ -34,6 +37,23 @@ public class Transform
     public MatrixFloat LocalRotationXMatrix;
     public MatrixFloat LocalRotationYMatrix;
     public MatrixFloat LocalRotationZMatrix;
+    // ----- LOCAL ROTATION ----- //
+    
+    // ----- LOCAL SCALE ----- //
+    public Vector4 LocalScale
+    {
+        get => _localScale;
+        set
+        {
+            _localScale = value;
+            RecalculateLocalScaleMatrix();
+        }
+    }
+    
+    private Vector4 _localScale;
+    
+    public MatrixFloat LocalScaleMatrix;
+    // ----- LOCAL SCALE ----- //
     
     public Transform(float x, float y, float z, float w)
     {
@@ -42,6 +62,9 @@ public class Transform
         
         this._localRotation = new Vector4(0, 0, 0, 1);
         InitLocalRotationMatrix();
+
+        this._localScale = new Vector4(1, 1, 1, 0);
+        InitLocalScaleMatrix();
     }
 
     public Transform()
@@ -51,6 +74,9 @@ public class Transform
         
         this._localRotation = new Vector4(0, 0, 0, 1);
         InitLocalRotationMatrix();
+
+        this._localScale = new Vector4(1, 1, 1, 0);
+        InitLocalScaleMatrix();
     }
 
     public void RecalculateLocalTranslationMatrix()
@@ -69,6 +95,7 @@ public class Transform
         this.LocalRotationYMatrix = MatrixFloat.Identity(4);
         this.LocalRotationZMatrix = MatrixFloat.Identity(4);
     }
+    
     public void RecalculateLocalRotationMatrix()
     {
         InitLocalRotationMatrix();
@@ -106,4 +133,31 @@ public class Transform
         LocalRotationMatrix = LocalRotationYMatrix * LocalRotationXMatrix * LocalRotationZMatrix;
     }
     
+    public void InitLocalScaleMatrix()
+    {
+        this.LocalScaleMatrix = MatrixFloat.Identity(4);
+    }
+
+    public void RecalculateLocalScaleMatrix()
+    {
+        InitLocalScaleMatrix();
+        
+        // Scale X
+        if (_localScale.x != 1)
+        {
+            LocalScaleMatrix[0,0] = _localScale.x;
+        }
+        
+        // Scale Y
+        if (_localScale.y != 1)
+        {
+            LocalScaleMatrix[1, 1] = _localScale.y;
+        }
+        
+        // Scale Z
+        if (_localScale.z != 1)
+        {
+            LocalScaleMatrix[2, 2] = _localScale.z;
+        }
+    }
 }
