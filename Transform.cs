@@ -66,7 +66,6 @@ public class Transform
         set
         {
             _localToWorldMatrix = value;
-            RecalculateLocalToWorldMatrix();
         }
     }
 
@@ -84,13 +83,41 @@ public class Transform
         set
         {
             _worldToLocalMatrix = value;
-            RecalculateWorldToLocalMatrix();
         }
     }
 
     private MatrixFloat _worldToLocalMatrix;
     // ----- WORLD TO LOCAL ----- //
+
+    // ----- WORLD POSITION ----- //
+    public Vector4 WorldPosition
+    {
+        get 
+        {
+            RecalculateWorldPosition();
+            return _worldPosition;
+        }
+        set
+        {
+            _worldPosition = value;
+        }
+    }
+
+    private Vector4 _worldPosition;
+    // ----- WORLD POSITION ----- //
     
+    // ----- PARENT ----- //
+    public Transform Parent
+    {
+        get => _parent;
+        set
+        {
+            _parent = value;
+        }
+    }
+
+    private Transform _parent;
+    // ----- PARENT ----- //
     
     
     public Transform(float x, float y, float z, float w)
@@ -103,6 +130,8 @@ public class Transform
 
         this._localScale = new Vector4(1, 1, 1, 0);
         InitLocalScaleMatrix();
+
+        InitWorldPosition();
         
         InitLocalToWorldMatrix();
         InitWorldToLocalMatrix();
@@ -118,6 +147,8 @@ public class Transform
 
         this._localScale = new Vector4(1, 1, 1, 0);
         InitLocalScaleMatrix();
+
+        InitWorldPosition();
 
         InitLocalToWorldMatrix();
         InitWorldToLocalMatrix();
@@ -212,9 +243,16 @@ public class Transform
 
     public void RecalculateLocalToWorldMatrix()
     {
-        _localToWorldMatrix = LocalTranslationMatrix * LocalRotationMatrix * LocalScaleMatrix;
+        MatrixFloat localMatrix = LocalTranslationMatrix * LocalRotationMatrix * LocalScaleMatrix;
         
-        Console.WriteLine($"LocalToWorldMatrix 0,0 : {_localToWorldMatrix[0,0]}");
+        if (_parent != null)
+        {
+            _localToWorldMatrix = _parent.LocalToWorldMatrix * localMatrix;
+        }
+        else
+        {
+            _localToWorldMatrix = localMatrix;
+        }
     }
     
     public void InitWorldToLocalMatrix()
@@ -227,5 +265,23 @@ public class Transform
         _worldToLocalMatrix = MatrixFloat.InvertByDeterminant(_localToWorldMatrix);
         
         Console.WriteLine($"WorldToLocalMatrix 0,0 : {_worldToLocalMatrix[0,0]}");
+    }
+
+    public void SetParent(Transform tParent)
+    {
+        _parent = tParent;
+    }
+
+    public void InitWorldPosition()
+    {
+        _worldPosition = new Vector4(0f, 0f, 0f, 1f);
+    }
+    
+    public void RecalculateWorldPosition()
+    {
+        _worldPosition.x = _localToWorldMatrix[0,3];
+        _worldPosition.y = _localToWorldMatrix[1,3];
+        _worldPosition.z = _localToWorldMatrix[2,3];
+        _worldPosition.w = _localToWorldMatrix[3,3];
     }
 }
