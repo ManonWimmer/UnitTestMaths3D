@@ -1,6 +1,6 @@
 // ----- MANON WIMMER ----- //
-
 namespace UnitTestMaths3DWimmer;
+// ReSharper disable All
 
 public class MatrixFloat
 {
@@ -81,147 +81,147 @@ public class MatrixFloat
         return m;
     }
 
-        public bool IsIdentity()
+    public bool IsIdentity()
+    {
+        if (this.NbLines != this.NbColumns) return false;
+        
+        for (int i = 0; i < this.NbLines; i++)
         {
-            if (this.NbLines != this.NbColumns) return false;
-            
-            for (int i = 0; i < this.NbLines; i++)
+            for (int j = 0; j < this.NbColumns; j++)
             {
-                for (int j = 0; j < this.NbColumns; j++)
+                if ((i == j && this.Matrix[i, j] != 1.0f) || (i != j && this.Matrix[i, j] != 0))
                 {
-                    if ((i == j && this.Matrix[i, j] != 1.0f) || (i != j && this.Matrix[i, j] != 0))
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        public void Multiply(int value)
-        {
-            for (int i = 0; i < this.NbLines; i++)
-            {
-                for (int j = 0; j < this.NbColumns; j++)
-                {
-                    this.Matrix[i, j] = value * this.Matrix[i, j];
-                }
-            }
-        }
-        
-        public MatrixFloat Multiply(MatrixFloat m2)
-        {
-            if (this.NbColumns != m2.NbLines)
-            {
-                throw new MatrixMultiplyException("Matrix sizes do not match for multiplication.");
-            }
-            
-            MatrixFloat m = new MatrixFloat(this.NbLines, m2.NbColumns);
-            
-            for (int i = 0; i < this.NbLines; i++)
-            {
-                for (int j = 0; j < m2.NbColumns; j++)
-                {
-                    float value = 0f;
-                    
-                    for (int k = 0; k < this.NbColumns; k++)
-                    {
-                        value += this.Matrix[i, k] * m2[k, j];
-                    }
-                    m[i, j] = value;
-                }
-            }
-            
-            return m;
-        }
-        
-        public static MatrixFloat Multiply(MatrixFloat matrixInt, int value)
-        {
-            MatrixFloat newMatrix = new MatrixFloat(matrixInt);
-
-            newMatrix.Multiply(value);
-
-            return newMatrix;
-        }
-        
-        public static MatrixFloat Multiply(MatrixFloat m1, MatrixFloat m2)
-        {
-            return m1.Multiply(m2);
-        }
-        
-        public static MatrixFloat operator *(MatrixFloat matrixFloat, int value)
-        {
-            return MatrixFloat.Multiply(matrixFloat, value);
-        }
-        
-        public static MatrixFloat operator *(MatrixFloat m1, MatrixFloat m2)
-        {
-            return m1.Multiply(m2);
-        }
-        
-        public static MatrixFloat operator *(int value, MatrixFloat matrixFloat)
-        {
-            return MatrixFloat.Multiply(matrixFloat, value);
-        }
-        
-        public static MatrixFloat operator -(MatrixFloat matrixFloat)
-        {
-            return MatrixFloat.Multiply(matrixFloat, -1);
-        }
-
-        public void Add(MatrixFloat m2)
-        {
-            if (this.NbLines != m2.NbLines || this.NbColumns != m2.NbColumns)
-            {
-                throw new MatrixSumException("Matrix sizes do not match.");
-            }
-            
-            for (int i = 0; i < this.NbLines; i++)
-            {
-                for (int j = 0; j < this.NbColumns; j++)
-                {
-                    this.Matrix[i, j] += m2[i, j];
+                    return false;
                 }
             }
         }
 
-        public static MatrixFloat Add(MatrixFloat m1, MatrixFloat m2)
-        {
-            MatrixFloat newMatrix = new MatrixFloat(m1);
-            newMatrix.Add(m2);
-            return newMatrix;
-        }
-        
-        public static MatrixFloat operator +(MatrixFloat m1, MatrixFloat m2)
-        {
-            return Add(m1, m2);
-        }
-        
-        public static MatrixFloat operator -(MatrixFloat m1, MatrixFloat m2)
-        {
-            return Add(m1, -m2);
-        }
+        return true;
+    }
 
-        public MatrixFloat Transpose()
+    public void Multiply(int value)
+    {
+        for (int i = 0; i < this.NbLines; i++)
         {
-            MatrixFloat newMatrix = new MatrixFloat(this.NbColumns, this.NbLines);
-
-            for (int i = 0; i < this.NbLines; i++)
+            for (int j = 0; j < this.NbColumns; j++)
             {
-                for (int j = 0; j < this.NbColumns; j++)
-                {
-                    newMatrix.Matrix[j, i] = this.Matrix[i, j];
-                }
+                this.Matrix[i, j] = value * this.Matrix[i, j];
             }
-            
-            return newMatrix;
+        }
+    }
+    
+    public MatrixFloat Multiply(MatrixFloat m2)
+    {
+        if (this.NbColumns != m2.NbLines)
+        {
+            throw new MatrixMultiplyException("Matrix sizes do not match for multiplication.");
         }
         
-        public static MatrixFloat Transpose(MatrixFloat matrixFloat)
+        MatrixFloat m = new MatrixFloat(this.NbLines, m2.NbColumns);
+        
+        for (int i = 0; i < this.NbLines; i++)
         {
-            return matrixFloat.Transpose();
+            for (int j = 0; j < m2.NbColumns; j++)
+            {
+                float value = 0f;
+                
+                for (int k = 0; k < this.NbColumns; k++)
+                {
+                    value += this.Matrix[i, k] * m2[k, j];
+                }
+                m[i, j] = value;
+            }
         }
+        
+        return m;
+    }
+    
+    public static MatrixFloat Multiply(MatrixFloat matrixInt, int value)
+    {
+        MatrixFloat newMatrix = new MatrixFloat(matrixInt);
+
+        newMatrix.Multiply(value);
+
+        return newMatrix;
+    }
+    
+    public static MatrixFloat Multiply(MatrixFloat m1, MatrixFloat m2)
+    {
+        return m1.Multiply(m2);
+    }
+    
+    public static MatrixFloat operator *(MatrixFloat matrixFloat, int value)
+    {
+        return MatrixFloat.Multiply(matrixFloat, value);
+    }
+    
+    public static MatrixFloat operator *(MatrixFloat m1, MatrixFloat m2)
+    {
+        return m1.Multiply(m2);
+    }
+    
+    public static MatrixFloat operator *(int value, MatrixFloat matrixFloat)
+    {
+        return MatrixFloat.Multiply(matrixFloat, value);
+    }
+    
+    public static MatrixFloat operator -(MatrixFloat matrixFloat)
+    {
+        return MatrixFloat.Multiply(matrixFloat, -1);
+    }
+
+    public void Add(MatrixFloat m2)
+    {
+        if (this.NbLines != m2.NbLines || this.NbColumns != m2.NbColumns)
+        {
+            throw new MatrixSumException("Matrix sizes do not match.");
+        }
+        
+        for (int i = 0; i < this.NbLines; i++)
+        {
+            for (int j = 0; j < this.NbColumns; j++)
+            {
+                this.Matrix[i, j] += m2[i, j];
+            }
+        }
+    }
+
+    public static MatrixFloat Add(MatrixFloat m1, MatrixFloat m2)
+    {
+        MatrixFloat newMatrix = new MatrixFloat(m1);
+        newMatrix.Add(m2);
+        return newMatrix;
+    }
+    
+    public static MatrixFloat operator +(MatrixFloat m1, MatrixFloat m2)
+    {
+        return Add(m1, m2);
+    }
+    
+    public static MatrixFloat operator -(MatrixFloat m1, MatrixFloat m2)
+    {
+        return Add(m1, -m2);
+    }
+
+    public MatrixFloat Transpose()
+    {
+        MatrixFloat newMatrix = new MatrixFloat(this.NbColumns, this.NbLines);
+
+        for (int i = 0; i < this.NbLines; i++)
+        {
+            for (int j = 0; j < this.NbColumns; j++)
+            {
+                newMatrix.Matrix[j, i] = this.Matrix[i, j];
+            }
+        }
+        
+        return newMatrix;
+    }
+    
+    public static MatrixFloat Transpose(MatrixFloat matrixFloat)
+    {
+        return matrixFloat.Transpose();
+    }
     
     public static MatrixFloat GenerateAugmentedMatrix(MatrixFloat m1, MatrixFloat m2)
     {

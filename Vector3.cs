@@ -14,7 +14,7 @@ public class Vector3
         this.z = z;
     }
     
-    public static explicit operator Vector3(Vector4 vector4)
+    public static implicit operator Vector3(Vector4 vector4)
     {
         return new Vector3(vector4.x, vector4.y, vector4.z);
     }

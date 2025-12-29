@@ -4,6 +4,40 @@ using UnitTestMaths3DWimmer;
 
 public class Transform
 {
+    public Transform(float x, float y, float z, float w)
+    {
+        this._localPosition = new Vector4(x, y, z, w);
+        RecalculateLocalTranslationMatrix();
+
+        this._localRotation = new Vector4(0, 0, 0, 1);
+        InitLocalRotationMatrix();
+
+        this._localScale = new Vector4(1, 1, 1, 0);
+        InitLocalScaleMatrix();
+
+        InitWorldPosition();
+
+        InitLocalToWorldMatrix();
+        InitWorldToLocalMatrix();
+    }
+
+    public Transform()
+    {
+        this._localPosition = new Vector4(0f, 0f, 0f, 1f);
+        RecalculateLocalTranslationMatrix();
+
+        this._localRotation = new Vector4(0, 0, 0, 1);
+        InitLocalRotationMatrix();
+
+        this._localScale = new Vector4(1, 1, 1, 0);
+        InitLocalScaleMatrix();
+
+        InitWorldPosition();
+
+        InitLocalToWorldMatrix();
+        InitWorldToLocalMatrix();
+    }
+
     // ----- LOCAL POSITION ----- //
     public Vector4 LocalPosition
     {
@@ -37,6 +71,20 @@ public class Transform
     public MatrixFloat LocalRotationXMatrix;
     public MatrixFloat LocalRotationYMatrix;
     public MatrixFloat LocalRotationZMatrix;
+
+    public Quaternion LocalRotationQuaternion
+    {
+        get
+        {
+            return Quaternion.Euler(LocalRotation.x, LocalRotation.y, LocalRotation.z);
+        }
+        set
+        {
+            Vector3 eulerAngles = value.EulerAngles;
+            LocalRotation = new Vector4(eulerAngles.x, eulerAngles.y, eulerAngles.z, 1f);
+            RecalculateLocalRotationMatrix();
+        }
+    }
     // ----- LOCAL ROTATION ----- //
     
     // ----- LOCAL SCALE ----- //
@@ -100,12 +148,41 @@ public class Transform
         set
         {
             _worldPosition = value;
+
+            if (_parent == null)
+            {
+                // Local = World
+                LocalPosition = _worldPosition;
+            }
+            else
+            {
+                // Local = Parent to local
+                Vector4 world = new Vector4(value.x, value.y, value.z, 1f);
+
+                MatrixFloat parentWorldToLocal = Parent.WorldToLocalMatrix;
+                Vector4 local = parentWorldToLocal * world;
+
+                LocalPosition = new Vector4(local.x, local.y, local.z, 1f);
+            }
         }
     }
 
     private Vector4 _worldPosition;
+
+    public void InitWorldPosition()
+    {
+        _worldPosition = new Vector4(0f, 0f, 0f, 1f);
+    }
+
+    public void RecalculateWorldPosition()
+    {
+        _worldPosition.x = _localToWorldMatrix[0, 3];
+        _worldPosition.y = _localToWorldMatrix[1, 3];
+        _worldPosition.z = _localToWorldMatrix[2, 3];
+        _worldPosition.w = _localToWorldMatrix[3, 3];
+    }
     // ----- WORLD POSITION ----- //
-    
+
     // ----- PARENT ----- //
     public Transform Parent
     {
@@ -117,43 +194,13 @@ public class Transform
     }
 
     private Transform _parent;
+    public void SetParent(Transform tParent)
+    {
+        _parent = tParent;
+    }
     // ----- PARENT ----- //
-    
-    
-    public Transform(float x, float y, float z, float w)
-    {
-        this._localPosition = new Vector4(x, y, z, w);
-        RecalculateLocalTranslationMatrix();
-        
-        this._localRotation = new Vector4(0, 0, 0, 1);
-        InitLocalRotationMatrix();
 
-        this._localScale = new Vector4(1, 1, 1, 0);
-        InitLocalScaleMatrix();
-
-        InitWorldPosition();
-        
-        InitLocalToWorldMatrix();
-        InitWorldToLocalMatrix();
-    }
-
-    public Transform()
-    {
-        this._localPosition = new Vector4(0f, 0f, 0f, 1f);
-        RecalculateLocalTranslationMatrix();
-        
-        this._localRotation = new Vector4(0, 0, 0, 1);
-        InitLocalRotationMatrix();
-
-        this._localScale = new Vector4(1, 1, 1, 0);
-        InitLocalScaleMatrix();
-
-        InitWorldPosition();
-
-        InitLocalToWorldMatrix();
-        InitWorldToLocalMatrix();
-    }
-
+    // ----- MATRIX ----- //
     public void RecalculateLocalTranslationMatrix()
     {
         this.LocalTranslationMatrix = MatrixFloat.Identity(4);
@@ -262,26 +309,9 @@ public class Transform
     
     public void RecalculateWorldToLocalMatrix()
     {
-        _worldToLocalMatrix = MatrixFloat.InvertByDeterminant(_localToWorldMatrix);
-        
+        _worldToLocalMatrix = MatrixFloat.InvertByDeterminant(LocalToWorldMatrix);
+
         Console.WriteLine($"WorldToLocalMatrix 0,0 : {_worldToLocalMatrix[0,0]}");
     }
-
-    public void SetParent(Transform tParent)
-    {
-        _parent = tParent;
-    }
-
-    public void InitWorldPosition()
-    {
-        _worldPosition = new Vector4(0f, 0f, 0f, 1f);
-    }
-    
-    public void RecalculateWorldPosition()
-    {
-        _worldPosition.x = _localToWorldMatrix[0,3];
-        _worldPosition.y = _localToWorldMatrix[1,3];
-        _worldPosition.z = _localToWorldMatrix[2,3];
-        _worldPosition.w = _localToWorldMatrix[3,3];
-    }
+    // ----- MATRIX ----- //
 }
